@@ -6,12 +6,12 @@ One-page reference for all structured data formats supported (or planned) by Met
 
 | Format | Where | What | Adoption | Status |
 |--------|-------|------|----------|--------|
-| **Meta Tags** | `<head>` meta | Basic metadata | 100% | 🔜 Planned |
-| **Open Graph** | `<head>` meta | Social sharing | 60%+ | 🔜 Planned |
-| **Twitter Cards** | `<head>` meta | Twitter/X sharing | 45% | 🔜 Planned |
-| **JSON-LD** | `<script>` JSON | SEO, Rich Results, AI | 41% ↗️ | 🔜 Planned |
-| **Microdata** | `<body>` attrs | SEO (older) | 26% ↘️ | 🔜 Planned |
-| **Microformats** | `<body>` classes | IndieWeb, semantic | 5-10% | ✅ In Progress |
+| **Meta Tags** | `<head>` meta | Basic metadata | 100% | ✅ **Complete** |
+| **Open Graph** | `<head>` meta | Social sharing | 60%+ | ✅ **Complete** |
+| **Twitter Cards** | `<head>` meta | Twitter/X sharing | 45% | ✅ **Complete** |
+| **JSON-LD** | `<script>` JSON | SEO, Rich Results, AI | 41% ↗️ | ✅ **Complete** |
+| **Microdata** | `<body>` attrs | SEO (older) | 26% ↘️ | ✅ **Complete** |
+| **Microformats** | `<body>` classes | IndieWeb, semantic | 5-10% | ✅ Prototype |
 | **RDFa** | `<body>` attrs | Semantic web | <10% | 🔜 Planned |
 
 ---

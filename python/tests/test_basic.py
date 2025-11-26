@@ -9,6 +9,7 @@ import pytest
 # This will fail until the package is built with maturin
 try:
     import meta_oxide
+
     PACKAGE_AVAILABLE = True
 except ImportError:
     PACKAGE_AVAILABLE = False
@@ -31,9 +32,9 @@ class TestHCard:
         cards = meta_oxide.extract_hcard(html)
 
         assert len(cards) == 1
-        assert cards[0]['name'] == 'John Doe'
-        assert cards[0]['url'] == 'https://example.com'
-        assert cards[0]['email'] == 'john@example.com'
+        assert cards[0]["name"] == "John Doe"
+        assert cards[0]["url"] == "https://example.com"
+        assert cards[0]["email"] == "john@example.com"
 
     def test_multiple_hcards(self):
         """Test extracting multiple h-cards."""
@@ -49,8 +50,8 @@ class TestHCard:
         cards = meta_oxide.extract_hcard(html)
 
         assert len(cards) == 2
-        assert cards[0]['name'] == 'Alice'
-        assert cards[1]['name'] == 'Bob'
+        assert cards[0]["name"] == "Alice"
+        assert cards[1]["name"] == "Bob"
 
     def test_empty_html(self):
         """Test with HTML containing no h-cards."""
@@ -78,8 +79,8 @@ class TestHEntry:
         entries = meta_oxide.extract_hentry(html)
 
         assert len(entries) == 1
-        assert entries[0]['name'] == 'My Blog Post'
-        assert entries[0]['published'] == '2024-01-01'
+        assert entries[0]["name"] == "My Blog Post"
+        assert entries[0]["published"] == "2024-01-01"
 
     def test_hentry_with_categories(self):
         """Test h-entry with multiple categories."""
@@ -94,8 +95,8 @@ class TestHEntry:
         entries = meta_oxide.extract_hentry(html)
 
         assert len(entries) == 1
-        assert 'Rust' in entries[0]['category']
-        assert 'Python' in entries[0]['category']
+        assert "Rust" in entries[0]["category"]
+        assert "Python" in entries[0]["category"]
 
 
 @pytest.mark.skipif(not PACKAGE_AVAILABLE, reason="Package not built yet")
@@ -115,9 +116,9 @@ class TestHEvent:
         events = meta_oxide.extract_hevent(html)
 
         assert len(events) == 1
-        assert events[0]['name'] == 'Conference 2024'
-        assert events[0]['start'] == '2024-05-15T09:00'
-        assert events[0]['location'] == 'Convention Center'
+        assert events[0]["name"] == "Conference 2024"
+        assert events[0]["start"] == "2024-05-15T09:00"
+        assert events[0]["location"] == "Convention Center"
 
 
 @pytest.mark.skipif(not PACKAGE_AVAILABLE, reason="Package not built yet")
@@ -141,10 +142,10 @@ class TestExtractAll:
 
         result = meta_oxide.extract_microformats(html)
 
-        assert 'h-card' in result
-        assert 'h-entry' in result
-        assert len(result['h-card']) == 1
-        assert len(result['h-entry']) == 1
+        assert "h-card" in result
+        assert "h-entry" in result
+        assert len(result["h-card"]) == 1
+        assert len(result["h-entry"]) == 1
 
 
 @pytest.mark.skipif(not PACKAGE_AVAILABLE, reason="Package not built yet")
@@ -161,7 +162,7 @@ class TestURLResolution:
 
         cards = meta_oxide.extract_hcard(html, base_url="https://example.com")
 
-        assert cards[0]['url'] == 'https://example.com/about'
+        assert cards[0]["url"] == "https://example.com/about"
 
     def test_absolute_url_unchanged(self):
         """Test that absolute URLs remain unchanged."""
@@ -173,11 +174,11 @@ class TestURLResolution:
 
         cards = meta_oxide.extract_hcard(html, base_url="https://example.com")
 
-        assert cards[0]['url'] == 'https://other.com/page'
+        assert cards[0]["url"] == "https://other.com/page"
 
 
 @pytest.mark.skipif(not PACKAGE_AVAILABLE, reason="Package not built yet")
 def test_version():
     """Test that version is available."""
-    assert hasattr(meta_oxide, '__version__')
+    assert hasattr(meta_oxide, "__version__")
     assert isinstance(meta_oxide.__version__, str)

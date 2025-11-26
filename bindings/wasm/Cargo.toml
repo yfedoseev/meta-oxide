@@ -1,0 +1,39 @@
+[package]
+name = "meta-oxide-wasm"
+version = "0.1.0"
+authors = ["Yury Fedoseev <yfedoseev@gmail.com>"]
+edition = "2021"
+description = "WebAssembly bindings for MetaOxide metadata extraction library"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yfedoseev/meta-oxide-wasm"
+readme = "README.md"
+keywords = ["wasm", "webassembly", "metadata", "html", "parser"]
+categories = ["wasm", "web-programming", "parser-implementations"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde-wasm-bindgen = "0.6"
+
+# Use the core meta_oxide library
+meta_oxide = { path = "../..", default-features = false }
+
+[dependencies.web-sys]
+version = "0.3"
+features = ["console"]
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+
+[profile.release]
+# Optimize for small code size
+opt-level = "z"
+lto = true
+codegen-units = 1
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz", "--enable-mutable-globals"]

@@ -1,0 +1,29 @@
+# Source files
+src/
+tests/
+examples/
+
+# Build tools
+Cargo.toml
+Cargo.lock
+tsconfig.json
+jest.config.js
+.eslintrc.js
+.prettierrc
+
+# Git
+.git/
+.gitignore
+
+# CI/CD
+.github/
+
+# Documentation
+*.md
+!README.md
+
+# Development
+node_modules/
+coverage/
+.vscode/
+.idea/

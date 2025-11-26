@@ -85,15 +85,15 @@ def example_hentry():
         print(f"  Updated: {entry.get('updated')}")
         print(f"  URL: {entry.get('url')}")
 
-        author = entry.get('author')
+        author = entry.get("author")
         if author:
             print(f"  Author: {author.get('name')} ({author.get('url')})")
 
-        categories = entry.get('category', [])
+        categories = entry.get("category", [])
         if categories:
             print(f"  Categories: {', '.join(categories)}")
 
-        content = entry.get('content', '')
+        content = entry.get("content", "")
         if content:
             # Show first 100 characters of content
             preview = content[:100] + "..." if len(content) > 100 else content
@@ -168,18 +168,18 @@ def example_extract_all():
 
     all_microformats = meta_oxide.extract_microformats(html)
 
-    print(f"\nFound microformats:")
+    print("\nFound microformats:")
     for mf_type, items in all_microformats.items():
         print(f"  {mf_type}: {len(items)} item(s)")
 
     # Access specific types
-    if 'h-card' in all_microformats:
+    if "h-card" in all_microformats:
         print(f"\n  First h-card name: {all_microformats['h-card'][0].get('name')}")
 
-    if 'h-entry' in all_microformats:
+    if "h-entry" in all_microformats:
         print(f"  First h-entry title: {all_microformats['h-entry'][0].get('name')}")
 
-    if 'h-event' in all_microformats:
+    if "h-event" in all_microformats:
         print(f"  First h-event name: {all_microformats['h-event'][0].get('name')}")
 
 
@@ -202,11 +202,11 @@ def example_url_resolution():
     cards = meta_oxide.extract_hcard(html, base_url=base_url)
 
     print(f"\nBase URL: {base_url}")
-    print(f"\nWithout URL resolution:")
-    print(f"  URL would be: /about")
-    print(f"  Photo would be: /images/photo.jpg")
+    print("\nWithout URL resolution:")
+    print("  URL would be: /about")
+    print("  Photo would be: /images/photo.jpg")
 
-    print(f"\nWith URL resolution:")
+    print("\nWith URL resolution:")
     print(f"  URL: {cards[0].get('url')}")
     print(f"  Photo: {cards[0].get('photo')}")
 

@@ -1,0 +1,49 @@
+# GitHub CODEOWNERS file
+# This file defines who is responsible for reviewing changes to different parts of the codebase
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Core Rust library
+/src/ @yfedoseev
+/Cargo.toml @yfedoseev
+/build.rs @yfedoseev
+
+# C FFI interface
+/src/ffi.rs @yfedoseev
+/include/ @yfedoseev
+
+# Language bindings
+/bindings/go/ @yfedoseev
+/bindings/nodejs/ @yfedoseev
+/bindings/java/ @yfedoseev
+/bindings/csharp/ @yfedoseev
+/bindings/wasm/ @yfedoseev
+
+# Python bindings
+/python/ @yfedoseev
+/pyproject.toml @yfedoseev
+
+# Documentation
+/docs/ @yfedoseev
+/README.md @yfedoseev
+/CHANGELOG.md @yfedoseev
+
+# Examples
+/examples/ @yfedoseev
+
+# Repository configuration
+/.github/ @yfedoseev
+/.gitignore @yfedoseev
+/CONTRIBUTING.md @yfedoseev
+/CODE_OF_CONDUCT.md @yfedoseev
+/LICENSE-MIT @yfedoseev
+/LICENSE-APACHE @yfedoseev
+
+# Tests
+/tests/ @yfedoseev
+/python/tests/ @yfedoseev
+/bindings/*/tests/ @yfedoseev
+
+# Configuration files
+*.toml @yfedoseev
+*.yaml @yfedoseev
+*.yml @yfedoseev

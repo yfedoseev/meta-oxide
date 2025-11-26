@@ -653,11 +653,361 @@ asyncio.run(main())
 
 ---
 
+## RDFa Examples
+
+### Basic RDFa Extraction
+
+```python
+import meta_oxide
+
+html = """
+<div vocab="https://schema.org/" typeof="Person">
+    <span property="name">Dr. Jane Smith</span>
+    <span property="jobTitle">Software Engineer</span>
+    <a property="url" href="https://janesmith.example">Website</a>
+</div>
+"""
+
+rdfa_items = meta_oxide.extract_rdfa(html)
+for item in rdfa_items:
+    print(f"Type: {item['type']}")
+    print(f"Vocab: {item['vocab']}")
+    for prop, values in item['properties'].items():
+        print(f"{prop}: {values}")
+```
+
+### RDFa with Nested Items
+
+```python
+import meta_oxide
+
+html = """
+<div vocab="https://schema.org/" typeof="Product">
+    <span property="name">Deluxe Widget</span>
+    <span property="brand">ACME Corp</span>
+    <div property="offers" typeof="Offer">
+        <span property="price" content="29.99">$29.99</span>
+        <span property="priceCurrency" content="USD">USD</span>
+    </div>
+    <div property="aggregateRating" typeof="AggregateRating">
+        <span property="ratingValue">4.5</span>
+        <span property="reviewCount">128</span>
+    </div>
+</div>
+"""
+
+rdfa_items = meta_oxide.extract_rdfa(html, "https://example.com")
+
+product = rdfa_items[0]
+print(f"Product: {product['properties']['name'][0]}")
+print(f"Price: {product['properties']['offers'][0]['properties']['price'][0]}")
+print(f"Rating: {product['properties']['aggregateRating'][0]['properties']['ratingValue'][0]}")
+```
+
+### RDFa with CURIE Prefix Expansion
+
+```python
+import meta_oxide
+
+# RDFa supports compact URIs (CURIEs) with prefix expansion
+html = """
+<div vocab="https://schema.org/" prefix="foaf: http://xmlns.com/foaf/0.1/">
+    <div typeof="Person">
+        <span property="name">Alice Wonder</span>
+        <span property="foaf:nick">alice</span>
+    </div>
+</div>
+"""
+
+rdfa_items = meta_oxide.extract_rdfa(html)
+# The 'foaf:nick' property is expanded to full URI
+print(rdfa_items[0]['properties'])
+```
+
+### RDFa with Content Override and Datatypes
+
+```python
+import meta_oxide
+
+html = """
+<div vocab="https://schema.org/" typeof="Event">
+    <span property="name">RustConf 2024</span>
+    <time property="startDate" content="2024-09-10T09:00:00-07:00" datatype="xsd:dateTime">
+        September 10, 2024
+    </time>
+    <span property="offers" typeof="Offer">
+        <span property="price" content="299" datatype="xsd:decimal">$299</span>
+    </span>
+</div>
+"""
+
+rdfa_items = meta_oxide.extract_rdfa(html)
+event = rdfa_items[0]
+# The 'content' attribute overrides visible text for machine-readable values
+print(f"Event: {event['properties']['name'][0]}")
+print(f"Start: {event['properties']['startDate'][0]}")
+```
+
+### Real-World RDFa: Article Markup
+
+```python
+import meta_oxide
+
+html = """
+<article vocab="https://schema.org/" typeof="NewsArticle">
+    <h1 property="headline">Breaking: New Discovery in Science</h1>
+    <div property="author" typeof="Person">
+        <span property="name">Dr. John Scientist</span>
+    </div>
+    <time property="datePublished" content="2024-11-25T10:00:00Z">
+        November 25, 2024
+    </time>
+    <div property="articleBody">
+        <p>Scientists have made a groundbreaking discovery...</p>
+    </div>
+</article>
+"""
+
+rdfa_items = meta_oxide.extract_rdfa(html, "https://news.example.com")
+article = rdfa_items[0]
+
+print(f"Headline: {article['properties']['headline'][0]}")
+print(f"Author: {article['properties']['author'][0]['properties']['name'][0]}")
+print(f"Published: {article['properties']['datePublished'][0]}")
+```
+
+## Web App Manifest Examples
+
+### Discover Manifest Link from HTML
+
+```python
+import meta_oxide
+
+html = """
+<html>
+<head>
+    <link rel="manifest" href="/app.webmanifest">
+    <link rel="manifest" href="/manifest.json">
+</head>
+</html>
+"""
+
+# Extract manifest link (returns first found)
+discovery = meta_oxide.extract_manifest(html, "https://myapp.example.com")
+print(f"Manifest URL: {discovery['href']}")
+# Output: https://myapp.example.com/app.webmanifest
+```
+
+### Parse Complete Web App Manifest
+
+```python
+import meta_oxide
+import json
+
+manifest_json = """
+{
+    "name": "My Progressive Web App",
+    "short_name": "MyPWA",
+    "description": "An awesome progressive web application",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "theme_color": "#2196F3",
+    "background_color": "#FFFFFF",
+    "icons": [
+        {
+            "src": "icons/icon-72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
+"""
+
+manifest = meta_oxide.parse_manifest(manifest_json, "https://myapp.example.com")
+
+print(f"App Name: {manifest['name']}")
+print(f"Short Name: {manifest['short_name']}")
+print(f"Display Mode: {manifest['display']}")
+print(f"Theme Color: {manifest['theme_color']}")
+
+# Icons are automatically resolved to absolute URLs
+for icon in manifest.get('icons', []):
+    print(f"Icon: {icon['src']} ({icon['sizes']})")
+# Output: https://myapp.example.com/icons/icon-72.png (72x72)
+```
+
+### Manifest with Shortcuts and Screenshots
+
+```python
+import meta_oxide
+
+manifest_json = """
+{
+    "name": "Task Manager App",
+    "short_name": "Tasks",
+    "start_url": "/",
+    "display": "standalone",
+    "shortcuts": [
+        {
+            "name": "New Task",
+            "short_name": "New",
+            "description": "Create a new task",
+            "url": "/new",
+            "icons": [{"src": "icons/new.png", "sizes": "96x96"}]
+        },
+        {
+            "name": "View All Tasks",
+            "url": "/tasks"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshots/home.png",
+            "sizes": "540x720",
+            "type": "image/png"
+        }
+    ]
+}
+"""
+
+manifest = meta_oxide.parse_manifest(manifest_json, "https://tasks.example.com")
+
+print(f"App: {manifest['name']}")
+print(f"Shortcuts: {len(manifest.get('shortcuts', []))}")
+for shortcut in manifest.get('shortcuts', []):
+    print(f"  - {shortcut['name']}: {shortcut['url']}")
+    # URLs are resolved: https://tasks.example.com/new
+```
+
+### Complete PWA Discovery and Parsing
+
+```python
+import meta_oxide
+import requests
+
+def discover_and_parse_pwa_manifest(page_url):
+    """Fetch a page, discover its manifest, and parse it."""
+    # Fetch the HTML page
+    response = requests.get(page_url)
+    html = response.text
+
+    # Discover manifest link
+    discovery = meta_oxide.extract_manifest(html, page_url)
+
+    if not discovery.get('href'):
+        print("No manifest found")
+        return None
+
+    manifest_url = discovery['href']
+    print(f"Found manifest: {manifest_url}")
+
+    # Fetch manifest JSON
+    manifest_response = requests.get(manifest_url)
+    manifest_json = manifest_response.text
+
+    # Parse manifest with URL resolution
+    manifest = meta_oxide.parse_manifest(manifest_json, manifest_url)
+
+    return manifest
+
+# Usage
+pwa_info = discover_and_parse_pwa_manifest("https://app.example.com")
+if pwa_info:
+    print(f"PWA Name: {pwa_info['name']}")
+    print(f"Installable: {pwa_info.get('display') == 'standalone'}")
+```
+
+## Combined Format Examples
+
+### Extract RDFa and JSON-LD from Same Page
+
+```python
+import meta_oxide
+
+html = """
+<html>
+<head>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Understanding Structured Data"
+    }
+    </script>
+</head>
+<body>
+    <article vocab="https://schema.org/" typeof="BlogPosting">
+        <h1 property="headline">Understanding Structured Data</h1>
+        <div property="author" typeof="Person">
+            <span property="name">Jane Blogger</span>
+        </div>
+    </article>
+</body>
+</html>
+"""
+
+# Extract both formats
+jsonld = meta_oxide.extract_jsonld(html)
+rdfa = meta_oxide.extract_rdfa(html)
+
+print("JSON-LD:")
+for item in jsonld:
+    print(f"  Type: {item.get('@type')}")
+    print(f"  Headline: {item.get('headline')}")
+
+print("\nRDFa:")
+for item in rdfa:
+    print(f"  Type: {item['type']}")
+    print(f"  Headline: {item['properties'].get('headline', ['N/A'])[0]}")
+```
+
+### Extract All Metadata Including Manifest
+
+```python
+import meta_oxide
+
+html = """
+<html>
+<head>
+    <title>My Progressive Web App</title>
+    <meta name="description" content="An awesome PWA">
+    <meta property="og:title" content="My PWA">
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+    <div vocab="https://schema.org/" typeof="WebApplication">
+        <span property="name">My PWA</span>
+    </div>
+</body>
+</html>
+"""
+
+# Extract everything at once
+all_data = meta_oxide.extract_all(html, "https://myapp.example.com")
+
+print(f"Title: {all_data['meta']['title']}")
+print(f"OG Title: {all_data['opengraph'].get('title')}")
+print(f"Manifest: {all_data.get('manifest', {}).get('href')}")
+print(f"RDFa Items: {len(all_data.get('rdfa', []))}")
+```
+
 ## Tips and Best Practices
 
 1. **Always provide base_url**: When parsing web content, provide the base URL for proper link resolution
 
-2. **Handle missing properties**: Microformats are flexible; not all properties will be present
+2. **Handle missing properties**: All formats are flexible; not all properties will be present
 
 3. **Validate extracted data**: Add validation logic for critical fields
 
@@ -674,3 +1024,9 @@ asyncio.run(main())
 6. **Log extraction failures**: Keep track of pages that fail to parse
 
 7. **Test with real-world HTML**: Test with actual websites, not just ideal examples
+
+8. **For RDFa**: Remember that property values can be nested items (check type)
+
+9. **For Manifests**: Always resolve relative URLs using the manifest URL, not the page URL
+
+10. **Use extract_all()**: For most use cases, `extract_all()` is the simplest approach to get all metadata at once

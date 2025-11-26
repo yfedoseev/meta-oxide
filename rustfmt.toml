@@ -1,0 +1,9 @@
+# Rust formatting configuration
+max_width = 100
+edition = "2021"
+reorder_imports = true
+reorder_modules = true
+use_small_heuristics = "Max"
+# Note: imports_granularity and group_imports require nightly Rust
+# imports_granularity = "Crate"
+# group_imports = "StdExternalCrate"

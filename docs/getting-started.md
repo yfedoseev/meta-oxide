@@ -1,6 +1,14 @@
 # Getting Started with MetaOxide
 
-MetaOxide is a high-performance Rust library with Python bindings for extracting microformats data from HTML. It supports various microformat types including h-card, h-entry, h-event, and more.
+MetaOxide is a high-performance Rust library with Python bindings for extracting **ALL structured data** from HTML. It supports:
+
+- ✅ **Standard Meta Tags** (100% of sites) - title, description, canonical, etc.
+- ✅ **Open Graph** (60%+ of sites) - Facebook, LinkedIn sharing
+- ✅ **Twitter Cards** (45% of sites) - Twitter/X previews
+- ✅ **JSON-LD** (41% of sites, growing) - Google Rich Results, AI training
+- ✅ **Microformats** (5-10% of sites) - h-card, h-entry, h-event
+
+**433 tests | 98%+ coverage | Production ready**
 
 ## Table of Contents
 
@@ -94,8 +102,41 @@ cargo doc --open
 ```python
 import meta_oxide
 
-# Extract all microformats
+# Extract ALL metadata at once (recommended!)
 html = """
+<html>
+<head>
+    <title>My Article</title>
+    <meta property="og:title" content="My Article">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "My Article"
+    }
+    </script>
+</head>
+<body></body>
+</html>
+"""
+
+# Extract everything
+data = meta_oxide.extract_all(html)
+
+print(data['meta']['title'])           # Standard meta tags
+print(data['opengraph']['title'])      # Open Graph
+print(data['twitter']['card'])         # Twitter Cards
+print(data['jsonld'][0]['headline'])   # JSON-LD
+
+# Or extract specific formats
+meta = meta_oxide.extract_meta(html)
+og = meta_oxide.extract_opengraph(html)
+twitter = meta_oxide.extract_twitter(html)
+jsonld = meta_oxide.extract_jsonld(html)
+
+# Extract microformats
+html_mf = """
 <div class="h-card">
     <span class="p-name">Jane Doe</span>
     <a class="u-url" href="https://example.com">Website</a>

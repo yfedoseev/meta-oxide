@@ -134,6 +134,212 @@ for event in events:
 
 ---
 
+#### `extract_rdfa(html, base_url=None)`
+
+Extract RDFa (Resource Description Framework in Attributes) structured data from HTML.
+
+**Parameters:**
+- `html` (str): HTML content to parse
+- `base_url` (str, optional): Base URL for resolving relative URLs
+
+**Returns:**
+- `list[dict]`: List of RDFa items extracted from the page
+
+**RDFa Item Structure:**
+```python
+{
+    'vocab': 'https://schema.org/',  # Vocabulary URL
+    'type': ['Person'],               # Type(s) from typeof attribute
+    'properties': {                   # Properties dictionary
+        'name': ['Jane Doe'],
+        'jobTitle': ['Engineer'],
+        'url': ['https://example.com']
+    },
+    'prefix': {...}                   # Prefix mappings (if defined)
+}
+```
+
+**Features:**
+- Support for `vocab`, `typeof`, `property`, `about`, `resource` attributes
+- Automatic CURIE prefix expansion (e.g., `foaf:name` → `http://xmlns.com/foaf/0.1/name`)
+- Default prefixes: schema, foaf, dc, og, xsd, rdf, rdfs
+- Content attribute override for machine-readable values
+- Datatype support (e.g., `xsd:decimal`, `xsd:dateTime`)
+- Nested item extraction with proper hierarchy
+- Full URL resolution for relative URIs
+
+**Example:**
+```python
+html = """
+<div vocab="https://schema.org/" typeof="Product">
+    <span property="name">Widget</span>
+    <span property="price" content="29.99" datatype="xsd:decimal">$29.99</span>
+    <div property="offers" typeof="Offer">
+        <span property="priceCurrency">USD</span>
+    </div>
+</div>
+"""
+
+rdfa_items = meta_oxide.extract_rdfa(html, "https://example.com")
+for item in rdfa_items:
+    print(f"Type: {item['type']}")
+    print(f"Name: {item['properties']['name'][0]}")
+    # Nested items are preserved
+    offers = item['properties']['offers'][0]
+    print(f"Currency: {offers['properties']['priceCurrency'][0]}")
+```
+
+**Raises:**
+- `RuntimeError`: If HTML parsing fails
+
+---
+
+#### `extract_manifest(html, base_url=None)`
+
+Discover and extract Web App Manifest link from HTML.
+
+**Parameters:**
+- `html` (str): HTML content to parse
+- `base_url` (str, optional): Base URL for resolving relative URLs
+
+**Returns:**
+- `dict`: ManifestDiscovery structure with manifest link information
+
+**Return Structure:**
+```python
+{
+    'href': 'https://example.com/manifest.json',  # Resolved manifest URL
+    'crossorigin': 'anonymous'                     # CORS setting (optional)
+}
+```
+
+**Example:**
+```python
+html = """
+<html>
+<head>
+    <link rel="manifest" href="/app.webmanifest">
+</head>
+</html>
+"""
+
+discovery = meta_oxide.extract_manifest(html, "https://myapp.example.com")
+print(f"Manifest URL: {discovery['href']}")
+# Output: https://myapp.example.com/app.webmanifest
+
+# Then fetch and parse the manifest JSON
+import requests
+manifest_json = requests.get(discovery['href']).text
+manifest = meta_oxide.parse_manifest(manifest_json, discovery['href'])
+```
+
+**Raises:**
+- `RuntimeError`: If HTML parsing fails
+
+**Notes:**
+- Returns first `<link rel="manifest">` found in document
+- Automatically resolves relative URLs against base_url
+- href will be None if no manifest link is found
+
+---
+
+#### `parse_manifest(json, base_url=None)`
+
+Parse Web App Manifest JSON content with automatic URL resolution.
+
+**Parameters:**
+- `json` (str): Manifest JSON content to parse
+- `base_url` (str, optional): Base URL for resolving relative URLs (typically the manifest URL)
+
+**Returns:**
+- `dict`: Parsed WebAppManifest structure
+
+**Return Structure:**
+```python
+{
+    'name': 'My App',
+    'short_name': 'App',
+    'description': 'An awesome app',
+    'start_url': 'https://example.com/',
+    'display': 'standalone',
+    'orientation': 'portrait',
+    'theme_color': '#2196F3',
+    'background_color': '#FFFFFF',
+    'scope': 'https://example.com/',
+    'icons': [
+        {
+            'src': 'https://example.com/icon-192.png',  # Resolved URL
+            'sizes': '192x192',
+            'type': 'image/png',
+            'purpose': 'any maskable'
+        }
+    ],
+    'shortcuts': [
+        {
+            'name': 'New Task',
+            'short_name': 'New',
+            'description': 'Create new',
+            'url': 'https://example.com/new',  # Resolved URL
+            'icons': [...]
+        }
+    ],
+    'screenshots': [
+        {
+            'src': 'https://example.com/screenshot.png',  # Resolved URL
+            'sizes': '540x720',
+            'type': 'image/png'
+        }
+    ]
+}
+```
+
+**Supported Fields:**
+- **Basic**: name, short_name, description
+- **Display**: display, orientation, scope, start_url
+- **Colors**: theme_color, background_color
+- **Icons**: icons (with src, sizes, type, purpose)
+- **Shortcuts**: shortcuts (with name, url, icons)
+- **Screenshots**: screenshots (for app stores)
+- **Advanced**: categories, iarc_rating_id, dir, lang, prefer_related_applications, related_applications
+
+**Example:**
+```python
+manifest_json = """
+{
+    "name": "My Progressive Web App",
+    "short_name": "MyPWA",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}
+"""
+
+manifest = meta_oxide.parse_manifest(manifest_json, "https://myapp.example.com")
+print(f"App: {manifest['name']}")
+print(f"Start URL: {manifest['start_url']}")
+# All icon URLs are resolved to absolute: https://myapp.example.com/icons/icon-192.png
+for icon in manifest['icons']:
+    print(f"Icon: {icon['src']} ({icon['sizes']})")
+```
+
+**Raises:**
+- `RuntimeError`: If JSON parsing fails or manifest structure is invalid
+
+**Notes:**
+- All relative URLs (icons, shortcuts, screenshots, start_url, scope) are automatically resolved
+- URL resolution is performed against base_url (typically the manifest file URL)
+- Follows W3C Web App Manifest specification
+- Missing optional fields are not included in the result
+
+---
+
 ## Rust API
 
 ### Modules

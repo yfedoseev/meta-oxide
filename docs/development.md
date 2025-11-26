@@ -547,7 +547,7 @@ test(hentry): add test for author extraction
 
 ```bash
 # Bump version
-# Edit Cargo.toml: version = "0.2.0"
+# Edit Cargo.toml: version = "0.1.0"
 
 # Update changelog
 # Edit CHANGELOG.md
@@ -557,8 +557,8 @@ git add Cargo.toml CHANGELOG.md
 git commit -m "chore: bump version to 0.2.0"
 
 # Tag
-git tag -a v0.2.0 -m "Release v0.2.0"
-git push origin v0.2.0
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin v0.1.0
 ```
 
 ### Publishing to PyPI
