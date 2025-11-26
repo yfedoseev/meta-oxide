@@ -86,49 +86,20 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y python3-dev
 
-      - name: Create virtual environment
-        run: python -m venv venv
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
 
-      - name: Activate virtual environment and install maturin
-        shell: bash
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            source venv/Scripts/activate
-          else
-            source venv/bin/activate
-          fi
-          pip install --upgrade pip setuptools wheel
-          pip install maturin[patchelf]
+      - name: Create virtual environment
+        run: uv venv
+
+      - name: Install build dependencies
+        run: uv pip install --upgrade pip setuptools wheel maturin[patchelf] pytest pytest-cov
 
       - name: Build Python package
-        shell: bash
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            source venv/Scripts/activate
-          else
-            source venv/bin/activate
-          fi
-          maturin develop
-
-      - name: Install test dependencies
-        shell: bash
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            source venv/Scripts/activate
-          else
-            source venv/bin/activate
-          fi
-          pip install pytest pytest-cov
+        run: uv run maturin develop
 
       - name: Run Python tests
-        shell: bash
-        run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            source venv/Scripts/activate
-          else
-            source venv/bin/activate
-          fi
-          pytest bindings/python/tests/ -v --cov=meta_oxide --cov-report=xml
+        run: uv run pytest bindings/python/tests/ -v --cov=meta_oxide --cov-report=xml
 
       - name: Upload coverage
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
