@@ -7,7 +7,7 @@ description = "Universal metadata extraction library supporting 13 formats (HTML
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/yfedoseev/meta_oxide"
 readme = "README.md"
-keywords = ["metadata", "microformats", "html", "json-ld", "parser", "web", "extraction", "scraping"]
+keywords = ["metadata", "parsing", "html", "web", "extraction"]
 categories = ["parser-implementations", "web-programming", "text-processing"]
 
 [lib]
