@@ -5,14 +5,14 @@ build-backend = "maturin"
 [project]
 name = "meta-oxide"
 version = "0.1.0"
-description = "A fast Rust library for extracting microformats data with Python bindings"
+description = "Universal metadata extraction library supporting 13 formats (HTML Meta, Open Graph, Twitter Cards, JSON-LD, Microdata, Microformats, RDFa, Dublin Core, Web App Manifest, oEmbed, rel-links, Images, SEO) with 7 language bindings"
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Yury Fedoseev", email = "yfedoseev@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT OR Apache-2.0"}
-keywords = ["microformats", "parser", "html", "metadata", "web-scraping"]
+keywords = ["metadata", "microformats", "html", "json-ld", "parser", "web", "extraction", "scraping", "open-graph", "twitter-cards", "schema-org"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -30,10 +30,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/meta_oxide"
-Documentation = "https://github.com/yourusername/meta_oxide/tree/main/docs"
-Repository = "https://github.com/yourusername/meta_oxide"
-"Bug Tracker" = "https://github.com/yourusername/meta_oxide/issues"
+Homepage = "https://github.com/yfedoseev/meta-oxide"
+Documentation = "https://github.com/yfedoseev/meta-oxide/tree/main/docs"
+Repository = "https://github.com/yfedoseev/meta-oxide"
+"Bug Tracker" = "https://github.com/yfedoseev/meta-oxide/issues"
 
 [project.optional-dependencies]
 dev = [

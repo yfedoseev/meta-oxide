@@ -3,12 +3,12 @@ name = "meta_oxide"
 version = "0.1.0"
 edition = "2021"
 authors = ["Yury Fedoseev <yfedoseev@gmail.com>"]
-description = "A Rust library for extracting data from different types of microformats with Python bindings"
+description = "Universal metadata extraction library supporting 13 formats (HTML Meta, Open Graph, Twitter Cards, JSON-LD, Microdata, Microformats, RDFa, Dublin Core, Web App Manifest, oEmbed, rel-links, Images, SEO) with 7 language bindings"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/yfedoseev/meta_oxide"
 readme = "README.md"
-keywords = ["microformats", "parser", "html", "metadata", "python"]
-categories = ["parser-implementations", "web-programming"]
+keywords = ["metadata", "microformats", "html", "json-ld", "parser", "web", "extraction", "scraping"]
+categories = ["parser-implementations", "web-programming", "text-processing"]
 
 [lib]
 name = "meta_oxide"
