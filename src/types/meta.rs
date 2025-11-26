@@ -1,6 +1,8 @@
 //! Types for standard HTML meta tags (Phase 1)
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
 use pyo3::types::PyDict;
 use serde::{Deserialize, Serialize};
 

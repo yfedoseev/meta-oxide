@@ -3,7 +3,9 @@
 //! JSON-LD is the fastest-growing format (41% adoption) that enables
 //! Google Rich Results, AI/LLM training, and rich metadata extraction.
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
 use pyo3::types::PyDict;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;

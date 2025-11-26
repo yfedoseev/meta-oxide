@@ -3,7 +3,9 @@
 //! Web App Manifest is a JSON file providing metadata for Progressive Web Apps (PWAs).
 //! It enables web applications to be installed on devices and provides app-like experiences.
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
 use pyo3::types::{PyDict, PyList};
 use serde::{Deserialize, Serialize};
 

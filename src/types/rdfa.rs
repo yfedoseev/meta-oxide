@@ -3,7 +3,9 @@
 //! RDFa is a W3C standard for embedding structured data in HTML using attributes.
 //! It provides semantic markup for web content with 62% desktop adoption.
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
 use pyo3::types::{PyDict, PyList};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

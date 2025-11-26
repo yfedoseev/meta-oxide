@@ -4,7 +4,9 @@
 //! on third party sites. Many platforms (YouTube, Vimeo, Twitter, etc.)
 //! support oEmbed for easy content embedding.
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
 use pyo3::types::PyDict;
 use serde::{Deserialize, Serialize};
 

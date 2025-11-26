@@ -6,7 +6,9 @@
 //! - **Open Graph**: Used by Facebook, LinkedIn, WhatsApp, Slack, Discord (60%+ adoption)
 //! - **Twitter Cards**: Used by Twitter/X for link previews (45% adoption)
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
 use pyo3::types::PyDict;
 use serde::{Deserialize, Serialize};
 

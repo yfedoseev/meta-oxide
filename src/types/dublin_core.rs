@@ -3,7 +3,9 @@
 //! Dublin Core is a metadata standard with 15 core elements
 //! commonly used in digital libraries and archives.
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
 use pyo3::types::PyDict;
 use serde::{Deserialize, Serialize};
 

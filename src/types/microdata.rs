@@ -3,7 +3,9 @@
 //! Microdata is an HTML specification for embedding structured data using
 //! itemscope, itemtype, and itemprop attributes with Schema.org vocabulary.
 
+#[cfg(feature = "python")]
 use pyo3::prelude::*;
+#[cfg(feature = "python")]
 use pyo3::types::{PyDict, PyList};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
