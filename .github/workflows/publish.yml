@@ -65,6 +65,8 @@ jobs:
 
       - name: Build wheels
         run: maturin build --release --target ${{ matrix.target }}
+        env:
+          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: '1'
 
       - name: Upload wheels as artifacts
         uses: actions/upload-artifact@v4
@@ -136,6 +138,8 @@ jobs:
       - name: Build
         working-directory: ./bindings/node
         run: npm run build
+        env:
+          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: '1'
 
       - name: Publish
         working-directory: ./bindings/node
