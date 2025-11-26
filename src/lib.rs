@@ -25,6 +25,7 @@ pub use extractors::common::{html_utils, url_utils};
 
 #[cfg(feature = "python")]
 /// Extract microformats data from HTML content
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_microformats(
@@ -99,6 +100,7 @@ py_extractor_binding!(extract_hgeo, hgeo, HGeo);
 ///     >>> meta = meta_oxide.extract_meta(html, "https://example.com")
 ///     >>> print(meta['title'])
 ///     >>> print(meta['description'])
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_meta(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<PyDict>> {
@@ -121,6 +123,7 @@ fn extract_meta(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<P
 ///     >>> og = meta_oxide.extract_opengraph(html)
 ///     >>> print(og['title'])
 ///     >>> print(og['image'])
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_opengraph(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<PyDict>> {
@@ -143,6 +146,7 @@ fn extract_opengraph(py: Python, html: &str, base_url: Option<&str>) -> PyResult
 ///     >>> card = meta_oxide.extract_twitter(html)
 ///     >>> print(card['card'])
 ///     >>> print(card['title'])
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_twitter(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<PyDict>> {
@@ -164,6 +168,7 @@ fn extract_twitter(py: Python, html: &str, base_url: Option<&str>) -> PyResult<P
 ///     >>> import meta_oxide
 ///     >>> card = meta_oxide.extract_twitter_with_fallback(html)
 ///     >>> print(card['title'])  # Falls back to og:title if twitter:title missing
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_twitter_with_fallback(
@@ -191,6 +196,7 @@ fn extract_twitter_with_fallback(
 ///     >>> for obj in jsonld:
 ///     ...     print(obj.get('@type'))
 ///     ...     print(obj.get('headline'))
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_jsonld(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<PyList>> {
@@ -221,6 +227,7 @@ fn extract_jsonld(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py
 ///     >>> for item in microdata:
 ///     ...     print(item.get('type'))
 ///     ...     print(item.get('name'))
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_microdata(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<PyList>> {
@@ -249,6 +256,7 @@ fn extract_microdata(py: Python, html: &str, base_url: Option<&str>) -> PyResult
 ///     >>> dc = meta_oxide.extract_dublin_core(html)
 ///     >>> print(dc.get('title'))
 ///     >>> print(dc.get('creator'))
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html))]
 fn extract_dublin_core(py: Python, html: &str) -> PyResult<Py<PyDict>> {
@@ -274,6 +282,7 @@ fn extract_dublin_core(py: Python, html: &str) -> PyResult<Py<PyDict>> {
 ///     >>> links = meta_oxide.extract_rel_links(html, "https://example.com")
 ///     >>> print(links.get('author'))  # ['/about']
 ///     >>> print(links.get('me'))  # ['https://twitter.com/user', 'https://github.com/user']
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_rel_links(html: &str, base_url: Option<&str>) -> PyResult<HashMap<String, Vec<String>>> {
@@ -301,6 +310,7 @@ fn extract_rel_links(html: &str, base_url: Option<&str>) -> PyResult<HashMap<Str
 ///     >>> oembed = meta_oxide.extract_oembed(html, "https://example.com")
 ///     >>> for endpoint in oembed.get('json_endpoints', []):
 ///     ...     print(endpoint['href'])
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_oembed(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<PyDict>> {
@@ -327,6 +337,7 @@ fn extract_oembed(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py
 ///     >>> for item in items:
 ///     ...     print(item.get('type'))
 ///     ...     print(item.get('properties'))
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_rdfa(py: Python, html: &str, base_url: Option<&str>) -> PyResult<PyObject> {
@@ -356,6 +367,7 @@ fn extract_rdfa(py: Python, html: &str, base_url: Option<&str>) -> PyResult<PyOb
 ///     >>> import meta_oxide
 ///     >>> discovery = meta_oxide.extract_manifest(html, "https://example.com")
 ///     >>> print(discovery['href'])
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_manifest(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<PyDict>> {
@@ -380,6 +392,8 @@ fn extract_manifest(py: Python, html: &str, base_url: Option<&str>) -> PyResult<
 ///     >>> manifest = meta_oxide.parse_manifest(json_content, "https://example.com")
 ///     >>> print(manifest['name'])
 ///     >>> print(manifest['icons'])
+#[cfg(feature = "python")]
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (json, base_url=None))]
 fn parse_manifest(py: Python, json: &str, base_url: Option<&str>) -> PyResult<Py<PyDict>> {
@@ -418,6 +432,8 @@ fn parse_manifest(py: Python, json: &str, base_url: Option<&str>) -> PyResult<Py
 ///     >>> print(data['twitter']['card'])
 ///     >>> for obj in data.get('jsonld', []):
 ///     ...     print(obj.get('@type'))
+#[cfg(feature = "python")]
+#[cfg(feature = "python")]
 #[pyfunction]
 #[pyo3(signature = (html, base_url=None))]
 fn extract_all(py: Python, html: &str, base_url: Option<&str>) -> PyResult<Py<PyDict>> {
