@@ -90,7 +90,8 @@ fn test_rdfa_resource_value_href() {
 
 #[test]
 fn test_rdfa_resource_value_src() {
-    let html = r#"<div typeof="Thing"><img property="image" src="https://example.com/image.jpg" /></div>"#;
+    let html =
+        r#"<div typeof="Thing"><img property="image" src="https://example.com/image.jpg" /></div>"#;
     let result = extract(html, None).unwrap();
     match &result[0].properties.get("image").unwrap()[0] {
         RdfaValue::Resource(uri) => assert_eq!(uri, "https://example.com/image.jpg"),
@@ -186,15 +187,13 @@ fn test_rdfa_deeply_nested() {
     let result = extract(html, None).unwrap();
     assert_eq!(result.len(), 1);
     match &result[0].properties.get("address").unwrap()[0] {
-        RdfaValue::Item(address) => {
-            match &address.properties.get("geo").unwrap()[0] {
-                RdfaValue::Item(geo) => {
-                    assert_eq!(geo.type_of, Some(vec!["GeoCoordinates".to_string()]));
-                    assert!(geo.properties.contains_key("latitude"));
-                }
-                _ => panic!("Expected nested geo item"),
+        RdfaValue::Item(address) => match &address.properties.get("geo").unwrap()[0] {
+            RdfaValue::Item(geo) => {
+                assert_eq!(geo.type_of, Some(vec!["GeoCoordinates".to_string()]));
+                assert!(geo.properties.contains_key("latitude"));
             }
-        }
+            _ => panic!("Expected nested geo item"),
+        },
         _ => panic!("Expected nested address item"),
     }
 }
@@ -319,7 +318,8 @@ fn test_rdfa_resolve_about_url() {
 
 #[test]
 fn test_rdfa_absolute_url_unchanged() {
-    let html = r#"<div typeof="Thing"><a property="url" href="https://other.com/page">Link</a></div>"#;
+    let html =
+        r#"<div typeof="Thing"><a property="url" href="https://other.com/page">Link</a></div>"#;
     let result = extract(html, Some("https://example.com")).unwrap();
     match &result[0].properties.get("url").unwrap()[0] {
         RdfaValue::Resource(uri) => assert_eq!(uri, "https://other.com/page"),

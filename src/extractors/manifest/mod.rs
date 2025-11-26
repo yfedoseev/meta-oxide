@@ -39,16 +39,12 @@ pub fn extract_link(html: &str, base_url: Option<&str>) -> Result<ManifestDiscov
         if let Some(href) = html_utils::get_attr(&link, "href") {
             // Resolve URL if base_url is provided
             let resolved = if let Some(base) = base_url {
-                url_utils::resolve_url(Some(base), &href)
-                    .map_err(MicroformatError::InvalidUrl)?
+                url_utils::resolve_url(Some(base), &href).map_err(MicroformatError::InvalidUrl)?
             } else {
                 href
             };
 
-            return Ok(ManifestDiscovery {
-                href: Some(resolved),
-                manifest: None,
-            });
+            return Ok(ManifestDiscovery { href: Some(resolved), manifest: None });
         }
     }
 

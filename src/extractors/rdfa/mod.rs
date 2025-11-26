@@ -61,9 +61,7 @@ impl PrefixContext {
 
     /// Expand all CURIEs in a space-separated list
     fn expand_curie_list(&self, list: &str) -> Vec<String> {
-        list.split_whitespace()
-            .map(|item| self.expand_curie(item))
-            .collect()
+        list.split_whitespace().map(|item| self.expand_curie(item)).collect()
     }
 }
 
@@ -251,10 +249,7 @@ fn extract_property_value_with_context(
         // Check if there's a datatype attribute (can be CURIE like xsd:integer)
         if let Some(datatype) = html_utils::get_attr(element, "datatype") {
             let expanded_datatype = prefix_ctx.expand_curie(&datatype);
-            return Ok(RdfaValue::TypedLiteral {
-                value: content,
-                datatype: expanded_datatype,
-            });
+            return Ok(RdfaValue::TypedLiteral { value: content, datatype: expanded_datatype });
         }
         return Ok(RdfaValue::Literal(content));
     }
@@ -285,10 +280,7 @@ fn extract_property_value_with_context(
         // Check if there's a datatype attribute (can be CURIE)
         if let Some(datatype) = html_utils::get_attr(element, "datatype") {
             let expanded_datatype = prefix_ctx.expand_curie(&datatype);
-            return Ok(RdfaValue::TypedLiteral {
-                value: text,
-                datatype: expanded_datatype,
-            });
+            return Ok(RdfaValue::TypedLiteral { value: text, datatype: expanded_datatype });
         }
         return Ok(RdfaValue::Literal(text));
     }
@@ -318,8 +310,7 @@ mod unit_tests {
 
     #[test]
     fn test_extract_simple_typeof() {
-        let html =
-            r#"<div vocab="https://schema.org/" typeof="Person"><span property="name">Jane Doe</span></div>"#;
+        let html = r#"<div vocab="https://schema.org/" typeof="Person"><span property="name">Jane Doe</span></div>"#;
         let result = extract(html, None).unwrap();
         assert_eq!(result.len(), 1);
         assert_eq!(result[0].vocab, Some("https://schema.org/".to_string()));
@@ -363,8 +354,7 @@ mod unit_tests {
 
     #[test]
     fn test_extract_property_resource() {
-        let html =
-            r#"<div typeof="Person"><a property="url" href="https://example.com">Website</a></div>"#;
+        let html = r#"<div typeof="Person"><a property="url" href="https://example.com">Website</a></div>"#;
         let result = extract(html, None).unwrap();
         let properties = &result[0].properties;
         match &properties.get("url").unwrap()[0] {
@@ -461,7 +451,8 @@ mod unit_tests {
 
     #[test]
     fn test_extract_datatype_attribute() {
-        let html = r#"<div typeof="Person"><span property="age" datatype="xsd:integer">30</span></div>"#;
+        let html =
+            r#"<div typeof="Person"><span property="age" datatype="xsd:integer">30</span></div>"#;
         let result = extract(html, None).unwrap();
         let properties = &result[0].properties;
         match &properties.get("age").unwrap()[0] {

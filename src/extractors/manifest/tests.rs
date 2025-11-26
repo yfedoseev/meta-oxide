@@ -164,10 +164,7 @@ fn test_parse_manifest_shortcuts() {
     assert_eq!(result.shortcuts[0].url, "https://example.com/new");
     assert_eq!(result.shortcuts[0].description, Some("Create a new item".to_string()));
     assert_eq!(result.shortcuts[1].icons.len(), 1);
-    assert_eq!(
-        result.shortcuts[1].icons[0].src,
-        "https://example.com/search-icon.png"
-    );
+    assert_eq!(result.shortcuts[1].icons[0].src, "https://example.com/search-icon.png");
 }
 
 #[test]

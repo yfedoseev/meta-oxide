@@ -110,8 +110,10 @@ fn to_c_string(s: String) -> *mut c_char {
     match CString::new(s) {
         Ok(c_str) => c_str.into_raw(),
         Err(_) => {
-            set_last_error(MetaOxideError::InvalidUtf8,
-                Some("String contains null byte".to_string()));
+            set_last_error(
+                MetaOxideError::InvalidUtf8,
+                Some("String contains null byte".to_string()),
+            );
             ptr::null_mut()
         }
     }
@@ -120,18 +122,20 @@ fn to_c_string(s: String) -> *mut c_char {
 // Helper function to safely convert C string to Rust &str
 unsafe fn from_c_string<'a>(s: *const c_char) -> Result<&'a str, MetaOxideError> {
     if s.is_null() {
-        set_last_error(MetaOxideError::NullPointer,
-            Some("NULL pointer passed as argument".to_string()));
+        set_last_error(
+            MetaOxideError::NullPointer,
+            Some("NULL pointer passed as argument".to_string()),
+        );
         return Err(MetaOxideError::NullPointer);
     }
 
-    CStr::from_ptr(s)
-        .to_str()
-        .map_err(|_| {
-            set_last_error(MetaOxideError::InvalidUtf8,
-                Some("Invalid UTF-8 in input string".to_string()));
-            MetaOxideError::InvalidUtf8
-        })
+    CStr::from_ptr(s).to_str().map_err(|_| {
+        set_last_error(
+            MetaOxideError::InvalidUtf8,
+            Some("Invalid UTF-8 in input string".to_string()),
+        );
+        MetaOxideError::InvalidUtf8
+    })
 }
 
 // Helper function to convert optional C string
@@ -148,8 +152,10 @@ fn to_json_c_string<T: serde::Serialize>(value: &T) -> *mut c_char {
     match serde_json::to_string(value) {
         Ok(json) => to_c_string(json),
         Err(_) => {
-            set_last_error(MetaOxideError::JsonError,
-                Some("Failed to serialize to JSON".to_string()));
+            set_last_error(
+                MetaOxideError::JsonError,
+                Some("Failed to serialize to JSON".to_string()),
+            );
             ptr::null_mut()
         }
     }
@@ -460,9 +466,7 @@ pub unsafe extern "C" fn meta_oxide_extract_rdfa(
 /// # Returns
 /// JSON object string or NULL on error
 #[no_mangle]
-pub unsafe extern "C" fn meta_oxide_extract_dublin_core(
-    html: *const c_char,
-) -> *mut c_char {
+pub unsafe extern "C" fn meta_oxide_extract_dublin_core(html: *const c_char) -> *mut c_char {
     clear_last_error();
 
     let html_str = match from_c_string(html) {
@@ -726,14 +730,17 @@ mod tests {
 
     #[test]
     fn test_extract_all_basic() {
-        let html = CString::new(r#"
+        let html = CString::new(
+            r#"
             <html>
                 <head>
                     <title>Test Page</title>
                     <meta name="description" content="Test description">
                 </head>
             </html>
-        "#).unwrap();
+        "#,
+        )
+        .unwrap();
 
         unsafe {
             let result = meta_oxide_extract_all(html.as_ptr(), ptr::null());
@@ -745,14 +752,17 @@ mod tests {
 
     #[test]
     fn test_extract_meta() {
-        let html = CString::new(r#"
+        let html = CString::new(
+            r#"
             <html>
                 <head>
                     <title>Test</title>
                     <meta name="description" content="Description">
                 </head>
             </html>
-        "#).unwrap();
+        "#,
+        )
+        .unwrap();
 
         unsafe {
             let result = meta_oxide_extract_meta(html.as_ptr(), ptr::null());

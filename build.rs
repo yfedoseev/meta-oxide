@@ -17,7 +17,8 @@ fn main() {
         .with_documentation(true)
         .with_pragma_once(true)
         .with_include_guard("META_OXIDE_H")
-        .with_header(r#"/**
+        .with_header(
+            r#"/**
  * MetaOxide C API
  *
  * A fast, comprehensive metadata extraction library for HTML content.
@@ -80,7 +81,8 @@ fn main() {
  *
  * @version 0.1.0
  * @license MIT OR Apache-2.0
- */"#)
+ */"#,
+        )
         .generate()
         .expect("Unable to generate C bindings")
         .write_to_file(&output_file);

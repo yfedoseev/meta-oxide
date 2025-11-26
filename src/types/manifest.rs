@@ -379,10 +379,7 @@ mod tests {
 
     #[test]
     fn test_manifest_serde_skip_none() {
-        let manifest = WebAppManifest {
-            name: Some("Test App".to_string()),
-            ..Default::default()
-        };
+        let manifest = WebAppManifest { name: Some("Test App".to_string()), ..Default::default() };
 
         let json = serde_json::to_value(&manifest).unwrap();
         let obj = json.as_object().unwrap();
@@ -489,10 +486,8 @@ mod tests {
     #[test]
     fn test_manifest_discovery_to_py_dict() {
         Python::with_gil(|py| {
-            let discovery = ManifestDiscovery {
-                href: Some("/manifest.json".to_string()),
-                manifest: None,
-            };
+            let discovery =
+                ManifestDiscovery { href: Some("/manifest.json".to_string()), manifest: None };
 
             let py_dict = discovery.to_py_dict(py);
             let dict = py_dict.bind(py);

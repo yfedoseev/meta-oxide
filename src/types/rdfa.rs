@@ -55,12 +55,7 @@ pub enum RdfaValue {
 impl RdfaItem {
     /// Create a new empty RDFa item
     pub fn new() -> Self {
-        Self {
-            type_of: None,
-            about: None,
-            vocab: None,
-            properties: HashMap::new(),
-        }
+        Self { type_of: None, about: None, vocab: None, properties: HashMap::new() }
     }
 
     /// Set the item type(s)
@@ -303,8 +298,7 @@ mod tests {
     #[test]
     fn test_to_py_dict_basic() {
         Python::with_gil(|py| {
-            let mut item =
-                RdfaItem::new().with_type(vec!["https://schema.org/Person".to_string()]);
+            let mut item = RdfaItem::new().with_type(vec!["https://schema.org/Person".to_string()]);
             item.add_property("name".to_string(), RdfaValue::Literal("Jane Doe".to_string()));
 
             let py_dict = item.to_py_dict(py);
@@ -362,8 +356,10 @@ mod tests {
             let mut item = RdfaItem::new();
             let mut address =
                 RdfaItem::new().with_type(vec!["https://schema.org/PostalAddress".to_string()]);
-            address
-                .add_property("streetAddress".to_string(), RdfaValue::Literal("123 Main".to_string()));
+            address.add_property(
+                "streetAddress".to_string(),
+                RdfaValue::Literal("123 Main".to_string()),
+            );
 
             item.add_property("address".to_string(), RdfaValue::Item(Box::new(address)));
 

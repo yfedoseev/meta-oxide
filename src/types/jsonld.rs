@@ -26,10 +26,9 @@ mod string_or_number {
 
         match Option::<StringOrNumber>::deserialize(deserializer)? {
             None => Ok(None),
-            Some(StringOrNumber::String(s)) => s
-                .parse::<f64>()
-                .map(Some)
-                .map_err(serde::de::Error::custom),
+            Some(StringOrNumber::String(s)) => {
+                s.parse::<f64>().map(Some).map_err(serde::de::Error::custom)
+            }
             Some(StringOrNumber::Number(n)) => Ok(Some(n)),
         }
     }
@@ -52,10 +51,9 @@ mod string_or_int {
 
         match Option::<StringOrInt>::deserialize(deserializer)? {
             None => Ok(None),
-            Some(StringOrInt::String(s)) => s
-                .parse::<i32>()
-                .map(Some)
-                .map_err(serde::de::Error::custom),
+            Some(StringOrInt::String(s)) => {
+                s.parse::<i32>().map(Some).map_err(serde::de::Error::custom)
+            }
             Some(StringOrInt::Int(n)) => Ok(Some(n)),
         }
     }
