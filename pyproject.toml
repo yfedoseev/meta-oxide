@@ -49,7 +49,6 @@ dev = [
 python-source = "python"
 module-name = "meta_oxide"
 bindings = "pyo3"
-features = ["python"]
 
 [tool.pytest.ini_options]
 testpaths = ["python/tests"]

@@ -15,7 +15,7 @@ name = "meta_oxide"
 crate-type = ["cdylib", "rlib", "staticlib"]
 
 [features]
-default = []
+default = ["python"]
 python = ["pyo3"]
 c-api = []
 
