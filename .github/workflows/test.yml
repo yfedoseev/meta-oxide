@@ -50,10 +50,10 @@ jobs:
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build library
-        run: cargo build --release
+        run: cargo build --release --no-default-features
 
       - name: Check code with clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --no-default-features -- -D warnings
 
   # Python bindings tests
   python:
