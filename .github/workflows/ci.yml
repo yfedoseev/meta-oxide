@@ -12,7 +12,7 @@ env:
 
 jobs:
   test-rust:
-    name: Test Rust
+    name: Test Rust (${{ matrix.os }}, ${{ matrix.rust }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -26,6 +26,10 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           components: rustfmt, clippy
+
+      - name: Install Python dev headers (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y python3-dev
 
       - name: Cache cargo registry
         uses: actions/cache@v4
@@ -54,11 +58,14 @@ jobs:
       - name: Build
         run: cargo build --verbose --all-features
 
-      - name: Run tests
+      - name: Run tests (with Python)
         run: cargo test --verbose --all-features
 
+      - name: Run tests (no-default-features)
+        run: cargo test --verbose --lib --no-default-features
+
   test-python:
-    name: Test Python
+    name: Test Python (${{ matrix.os }}, Python ${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -75,17 +82,53 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install maturin
-        run: pip install maturin[patchelf]
+      - name: Install Python dev headers (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y python3-dev
+
+      - name: Create virtual environment
+        run: python -m venv venv
+
+      - name: Activate virtual environment and install maturin
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            source venv/Scripts/activate
+          else
+            source venv/bin/activate
+          fi
+          pip install --upgrade pip setuptools wheel
+          pip install maturin[patchelf]
 
       - name: Build Python package
-        run: maturin develop
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            source venv/Scripts/activate
+          else
+            source venv/bin/activate
+          fi
+          maturin develop
 
       - name: Install test dependencies
-        run: pip install pytest pytest-cov
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            source venv/Scripts/activate
+          else
+            source venv/bin/activate
+          fi
+          pip install pytest pytest-cov
 
       - name: Run Python tests
-        run: pytest bindings/python/tests/ -v --cov=meta_oxide --cov-report=xml
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            source venv/Scripts/activate
+          else
+            source venv/bin/activate
+          fi
+          pytest bindings/python/tests/ -v --cov=meta_oxide --cov-report=xml
 
       - name: Upload coverage
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
@@ -103,10 +146,13 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install Python dev headers
+        run: sudo apt-get update && sudo apt-get install -y python3-dev
+
       - name: Install tarpaulin
         run: cargo install cargo-tarpaulin
 
-      - name: Generate coverage
+      - name: Generate coverage (with Python)
         run: cargo tarpaulin --verbose --all-features --workspace --timeout 120 --out xml
 
       - name: Upload coverage
