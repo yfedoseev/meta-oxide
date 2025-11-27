@@ -16,11 +16,15 @@ jobs:
         include:
           - os: ubuntu-latest
             rust: stable
+          - os: ubuntu-latest
+            rust: beta
           - os: macos-latest
             rust: stable
+          - os: macos-latest
+            rust: beta
           - os: windows-latest
             rust: stable
-          - os: ubuntu-latest
+          - os: windows-latest
             rust: beta
     steps:
       - uses: actions/checkout@v4
