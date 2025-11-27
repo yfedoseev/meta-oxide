@@ -1,6 +1,16 @@
-[build]
-# Enable PyO3 stable ABI forward compatibility for Python 3.14+ support
-# Needed until PyO3 officially supports Python 3.14
+# Linker configuration: use platform-specific settings to avoid compatibility issues
+# Especially important for Node.js NAPI bindings which may have different linker requirements
+
+[target.x86_64-apple-darwin]
+rustflags = ["--cap-lints", "warn"]
+
+[target.aarch64-apple-darwin]
+rustflags = ["--cap-lints", "warn"]
+
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["--cap-lints", "warn"]
+
+[target.x86_64-pc-windows-msvc]
 rustflags = ["--cap-lints", "warn"]
 
 [env]
