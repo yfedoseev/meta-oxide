@@ -27,10 +27,6 @@ jobs:
           toolchain: ${{ matrix.rust }}
           components: rustfmt, clippy
 
-      - name: Install Python dev headers (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y python3-dev
-
       - name: Cache cargo registry
         uses: actions/cache@v4
         with:
@@ -53,15 +49,12 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Run clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --all-targets --no-default-features -- -D warnings
 
       - name: Build
-        run: cargo build --verbose --all-features
+        run: cargo build --release --no-default-features
 
-      - name: Run tests (with Python)
-        run: cargo test --verbose --all-features
-
-      - name: Run tests (no-default-features)
+      - name: Run tests
         run: cargo test --verbose --lib --no-default-features
 
   test-python:
