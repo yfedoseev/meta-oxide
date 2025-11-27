@@ -47,11 +47,11 @@ pub enum RdfaValue {
     /// Typed literal with datatype
     TypedLiteral { value: String, datatype: String },
 
+    /// Literal text value (before Resource since both accept strings)
+    Literal(String),
+
     /// URI reference
     Resource(String),
-
-    /// Literal text value
-    Literal(String),
 }
 
 impl RdfaItem {

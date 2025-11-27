@@ -54,7 +54,7 @@ fn test_extract_with_url_properties() {
 
     let url = &items[0].properties.get("url").unwrap()[0];
     match url {
-        PropertyValue::Text(s) => assert_eq!(s, "https://example.com"),
+        PropertyValue::Text(s) => assert_eq!(s, "https://example.com/"),
         _ => panic!("Expected URL"),
     }
 

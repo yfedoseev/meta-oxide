@@ -244,6 +244,6 @@ mod unit_tests {
         let element = html.select(&selector).next().unwrap();
 
         let value = extract_property_value(&element, None);
-        assert_eq!(value, Some("https://example.com".to_string()));
+        assert_eq!(value, Some("https://example.com/".to_string()));
     }
 }

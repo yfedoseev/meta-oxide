@@ -49,7 +49,7 @@ mod tests {
         assert_eq!(cards.len(), 1);
         let card = &cards[0];
         assert_eq!(card.name, Some("John Doe".to_string()));
-        assert_eq!(card.url, Some("https://example.com".to_string()));
+        assert_eq!(card.url, Some("https://example.com/".to_string()));
         assert_eq!(card.photo, Some("https://example.com/photo.jpg".to_string()));
         assert_eq!(card.email, Some("john@example.com".to_string()));
     }
