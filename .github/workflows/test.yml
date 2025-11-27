@@ -138,15 +138,12 @@ jobs:
         working-directory: ./bindings/node
         run: npm run build
         env:
-          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: '1'
           # Increase Node.js memory for Windows builds
           NODE_OPTIONS: ${{ runner.os == 'Windows' && '--max-old-space-size=4096' || '' }}
 
       - name: Run Node.js tests
         working-directory: ./bindings/node
         run: npm test
-        env:
-          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: '1'
 
   # Code quality checks
   quality:
