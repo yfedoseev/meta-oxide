@@ -121,8 +121,9 @@ jobs:
           cache-dependency-path: bindings/node/package-lock.json
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
         with:
+          toolchain: stable
           targets: ${{ matrix.os == 'windows-latest' && 'x86_64-pc-windows-msvc' || '' }}
 
       # FIXED: Setup MSVC toolchain for Windows builds
