@@ -79,7 +79,7 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      # FIXED: Use python -m for all commands without venv activation
+      # FIXED: Use maturin build + pip install instead of develop (avoids venv requirement)
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
@@ -88,7 +88,8 @@ jobs:
 
       - name: Build Python bindings
         run: |
-          python -m maturin develop
+          python -m maturin build --release --out dist
+          python -m pip install --no-index --find-links dist meta_oxide
         shell: bash
         env:
           PYO3_USE_ABI3_FORWARD_COMPATIBILITY: '1'
